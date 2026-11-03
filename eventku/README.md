@@ -5,7 +5,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
-npm run dev
+# If your terminal is in the parent folder, enter the app folder first:
+cd eventku
+npm.cmd run dev
 # or
 yarn dev
 # or

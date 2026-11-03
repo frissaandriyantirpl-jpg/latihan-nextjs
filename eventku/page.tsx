@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
 import { events, rupiah } from "@/data/events";
+import FormPesan from "@/components/FormPesan";
+import TombolFavorit from "@/components/TombolFavorit";
 
-export default async function Detail({ params }: PageProps<"/event/[id]">) {
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function Detail({ params }: PageProps) {
   const { id } = await params;
   const event = events.find((e) => e.id === Number(id));
   if (!event) notFound();
@@ -14,10 +20,14 @@ export default async function Detail({ params }: PageProps<"/event/[id]">) {
       </span>
       <h1 className="mt-2 text-3xl font-bold">{event.judul}</h1>
       <p className="mt-1 text-slate-500">
-        {event.tanggal} · {event.lokasi}
+        {event.tanggal} - {event.lokasi}
       </p>
       <p className="mt-4 text-xl font-semibold">{rupiah(event.harga)}</p>
       <p className="text-slate-600">Sisa {sisa} dari {event.kuota} tiket</p>
+      <div className="mt-4 flex flex-wrap items-center gap-4">
+        <TombolFavorit id={event.id} />
+        <FormPesan event={event} />
+      </div>
     </article>
   );
 }
