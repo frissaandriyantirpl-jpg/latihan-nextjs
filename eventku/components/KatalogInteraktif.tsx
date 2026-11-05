@@ -11,54 +11,74 @@ export default function KatalogInteraktif({
 }: {
   events: Event[];
 }) {
-  // State pencarian, kategori, dan pengurutan
   const [cari, setCari] = useState("");
   const [kategori, setKategori] = useState("Semua");
   const [urut, setUrut] = useState("tanggal");
 
-  // State jumlah event yang ditampilkan
+  // Langkah 6: tampilkan lagi
   const [jumlahTampil, setJumlahTampil] = useState(4);
 
-  // Penanda bahwa localStorage sudah dibaca
+  // Langkah 7: simpan urutan
   const [sudahBacaUrut, setSudahBacaUrut] = useState(false);
 
-  // Membaca urutan dari localStorage setelah halaman dimuat
+  // Langkah 9: penyaring lanjutan
+  const [hanyaTersedia, setHanyaTersedia] = useState(false);
+  const [hargaMaksimal, setHargaMaksimal] = useState("");
+
+  // Membaca urutan dari localStorage
   useEffect(() => {
-    const urutTersimpan = localStorage.getItem("urut");
+    const tersimpan = localStorage.getItem("urut");
 
     if (
-      urutTersimpan === "tanggal" ||
-      urutTersimpan === "termurah" ||
-      urutTersimpan === "termahal" ||
-      urutTersimpan === "nama"
+      tersimpan === "tanggal" ||
+      tersimpan === "termurah" ||
+      tersimpan === "termahal" ||
+      tersimpan === "nama"
     ) {
-      setUrut(urutTersimpan);
+      setUrut(tersimpan);
     }
 
     setSudahBacaUrut(true);
   }, []);
 
-  // Menyimpan pilihan urutan ke localStorage
+  // Menyimpan urutan ke localStorage
   useEffect(() => {
     if (sudahBacaUrut) {
       localStorage.setItem("urut", urut);
     }
   }, [urut, sudahBacaUrut]);
 
-  // Daftar kategori event
+  // Daftar kategori
   const daftarKategori = [
     "Semua",
     ...new Set(events.map((e) => e.kategori)),
   ];
 
-  // Filter berdasarkan pencarian dan kategori
-  const hasil = events.filter(
-    (e) =>
-      e.judul.toLowerCase().includes(cari.toLowerCase()) &&
-      (kategori === "Semua" || e.kategori === kategori)
-  );
+  // Penyaringan event
+  const hasil = events.filter((e) => {
+    const cocokCari = e.judul
+      .toLowerCase()
+      .includes(cari.toLowerCase());
 
-  // Mengurutkan event
+    const cocokKategori =
+      kategori === "Semua" || e.kategori === kategori;
+
+    const cocokTersedia =
+      !hanyaTersedia || e.kuota - e.terisi > 0;
+
+    const cocokHarga =
+      hargaMaksimal === "" ||
+      e.harga <= Number(hargaMaksimal);
+
+    return (
+      cocokCari &&
+      cocokKategori &&
+      cocokTersedia &&
+      cocokHarga
+    );
+  });
+
+  // Pengurutan event
   const tersusun = [...hasil].sort((a, b) => {
     if (urut === "termurah") {
       return a.harga - b.harga;
@@ -75,26 +95,29 @@ export default function KatalogInteraktif({
     return a.tanggal.localeCompare(b.tanggal);
   });
 
-  // Menghitung total harga
+  // Statistik katalog
   const totalHarga = tersusun.reduce(
     (total, e) => total + e.harga,
     0
   );
 
-  // Menghitung rata-rata harga
   const rataRataHarga =
     tersusun.length > 0
       ? totalHarga / tersusun.length
       : 0;
 
-  // Menghitung total sisa tiket
   const totalSisaTiket = tersusun.reduce(
     (total, e) => total + (e.kuota - e.terisi),
     0
   );
 
-  // Menampilkan event sesuai jumlah yang dipilih
+  // Membatasi jumlah event
   const eventTampil = tersusun.slice(0, jumlahTampil);
+
+  // Mengembalikan tampilan ke 4 event
+  const resetTampilan = () => {
+    setJumlahTampil(4);
+  };
 
   return (
     <div>
@@ -104,7 +127,7 @@ export default function KatalogInteraktif({
           value={cari}
           onChange={(e) => {
             setCari(e.target.value);
-            setJumlahTampil(4);
+            resetTampilan();
           }}
           placeholder="Cari event..."
           className="rounded border bg-white p-3"
@@ -114,7 +137,7 @@ export default function KatalogInteraktif({
           value={kategori}
           onChange={(e) => {
             setKategori(e.target.value);
-            setJumlahTampil(4);
+            resetTampilan();
           }}
           className="rounded border bg-white p-3"
         >
@@ -129,7 +152,7 @@ export default function KatalogInteraktif({
           value={urut}
           onChange={(e) => {
             setUrut(e.target.value);
-            setJumlahTampil(4);
+            resetTampilan();
           }}
           className="rounded border bg-white p-3"
         >
@@ -140,18 +163,56 @@ export default function KatalogInteraktif({
         </select>
       </div>
 
+      {/* Penyaring lanjutan */}
+      <div className="mb-5 flex flex-wrap items-center gap-4 rounded-xl border bg-white p-4">
+
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <input
+            type="checkbox"
+            checked={hanyaTersedia}
+            onChange={(e) => {
+              setHanyaTersedia(e.target.checked);
+              resetTampilan();
+            }}
+            className="h-4 w-4"
+          />
+          Hanya yang masih ada tiket
+        </label>
+
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="hargaMaksimal"
+            className="text-sm font-medium"
+          >
+            Harga maksimal:
+          </label>
+
+          <input
+            id="hargaMaksimal"
+            type="number"
+            min="0"
+            value={hargaMaksimal}
+            onChange={(e) => {
+              setHargaMaksimal(e.target.value);
+              resetTampilan();
+            }}
+            placeholder="Tanpa batas"
+            className="w-32 rounded border p-2"
+          />
+        </div>
+      </div>
+
       {/* Jumlah event ditemukan */}
       <p className="mb-3 text-base">
         {tersusun.length} event ditemukan
       </p>
 
-      {/* Statistik katalog */}
+      {/* Statistik */}
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border bg-white p-4">
           <p className="text-sm text-gray-500">
             Rata-rata harga
           </p>
-
           <p className="font-bold text-blue-700">
             {rupiah(rataRataHarga)}
           </p>
@@ -161,7 +222,6 @@ export default function KatalogInteraktif({
           <p className="text-sm text-gray-500">
             Total sisa tiket
           </p>
-
           <p className="font-bold text-green-700">
             {totalSisaTiket}
           </p>
