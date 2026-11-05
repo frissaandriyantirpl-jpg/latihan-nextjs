@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Event } from "@/data/events";
 import { rupiah } from "@/data/events";
 import KartuEvent from "./KartuEvent";
@@ -11,51 +11,94 @@ export default function KatalogInteraktif({
 }: {
   events: Event[];
 }) {
+  // State pencarian, kategori, dan pengurutan
   const [cari, setCari] = useState("");
   const [kategori, setKategori] = useState("Semua");
   const [urut, setUrut] = useState("tanggal");
+
+  // State jumlah event yang ditampilkan
   const [jumlahTampil, setJumlahTampil] = useState(4);
 
+  // Penanda bahwa localStorage sudah dibaca
+  const [sudahBacaUrut, setSudahBacaUrut] = useState(false);
+
+  // Membaca urutan dari localStorage setelah halaman dimuat
+  useEffect(() => {
+    const urutTersimpan = localStorage.getItem("urut");
+
+    if (
+      urutTersimpan === "tanggal" ||
+      urutTersimpan === "termurah" ||
+      urutTersimpan === "termahal" ||
+      urutTersimpan === "nama"
+    ) {
+      setUrut(urutTersimpan);
+    }
+
+    setSudahBacaUrut(true);
+  }, []);
+
+  // Menyimpan pilihan urutan ke localStorage
+  useEffect(() => {
+    if (sudahBacaUrut) {
+      localStorage.setItem("urut", urut);
+    }
+  }, [urut, sudahBacaUrut]);
+
+  // Daftar kategori event
   const daftarKategori = [
     "Semua",
     ...new Set(events.map((e) => e.kategori)),
   ];
 
+  // Filter berdasarkan pencarian dan kategori
   const hasil = events.filter(
     (e) =>
       e.judul.toLowerCase().includes(cari.toLowerCase()) &&
       (kategori === "Semua" || e.kategori === kategori)
   );
 
+  // Mengurutkan event
   const tersusun = [...hasil].sort((a, b) => {
-    if (urut === "termurah") return a.harga - b.harga;
-    if (urut === "termahal") return b.harga - a.harga;
-    if (urut === "nama") return a.judul.localeCompare(b.judul);
+    if (urut === "termurah") {
+      return a.harga - b.harga;
+    }
+
+    if (urut === "termahal") {
+      return b.harga - a.harga;
+    }
+
+    if (urut === "nama") {
+      return a.judul.localeCompare(b.judul);
+    }
 
     return a.tanggal.localeCompare(b.tanggal);
   });
 
-  // Statistik katalog
+  // Menghitung total harga
   const totalHarga = tersusun.reduce(
     (total, e) => total + e.harga,
     0
   );
 
+  // Menghitung rata-rata harga
   const rataRataHarga =
     tersusun.length > 0
       ? totalHarga / tersusun.length
       : 0;
 
+  // Menghitung total sisa tiket
   const totalSisaTiket = tersusun.reduce(
     (total, e) => total + (e.kuota - e.terisi),
     0
   );
 
-  // Membatasi jumlah event yang ditampilkan
+  // Menampilkan event sesuai jumlah yang dipilih
   const eventTampil = tersusun.slice(0, jumlahTampil);
 
   return (
     <div>
+      {/* Pencarian, kategori, dan pengurutan */}
       <div className="mb-4 flex flex-wrap gap-3">
         <input
           value={cari}
@@ -97,15 +140,18 @@ export default function KatalogInteraktif({
         </select>
       </div>
 
+      {/* Jumlah event ditemukan */}
       <p className="mb-3 text-base">
         {tersusun.length} event ditemukan
       </p>
 
+      {/* Statistik katalog */}
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border bg-white p-4">
           <p className="text-sm text-gray-500">
             Rata-rata harga
           </p>
+
           <p className="font-bold text-blue-700">
             {rupiah(rataRataHarga)}
           </p>
@@ -115,12 +161,14 @@ export default function KatalogInteraktif({
           <p className="text-sm text-gray-500">
             Total sisa tiket
           </p>
+
           <p className="font-bold text-green-700">
             {totalSisaTiket}
           </p>
         </div>
       </div>
 
+      {/* Daftar event */}
       {eventTampil.length === 0 ? (
         <p className="text-gray-500">
           Tidak ada event yang cocok.
@@ -133,6 +181,7 @@ export default function KatalogInteraktif({
         </div>
       )}
 
+      {/* Tombol tampilkan lagi */}
       {jumlahTampil < tersusun.length && (
         <div className="mt-6 text-center">
           <button
