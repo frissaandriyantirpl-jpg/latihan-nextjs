@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
+import Image from "next/image";
 
 import Navbar from "@/components/Navbar";
 import FormPesan from "@/components/FormPesan";
@@ -51,6 +52,29 @@ export default async function DetailEvent({
         </Link>
 
         <article className="mt-6 overflow-hidden rounded-[2rem] bg-white shadow-xl shadow-slate-900/5">
+          <div className="relative mb-4 aspect-[40/21] w-full overflow-hidden bg-gradient-to-br from-amber-100 via-orange-50 to-rose-100">
+            {event.gambar ? (
+              <Image
+                src={event.gambar}
+                alt={event.judul}
+                fill
+                sizes="(max-width: 1024px) 100vw, 960px"
+                preload
+                className="rounded-lg object-cover"
+              />
+            ) : (
+              <div
+                aria-label={`${event.kategori}: ${event.judul}`}
+                role="img"
+                className="flex h-full items-center justify-center"
+              >
+                <span className="rounded-full bg-white/85 px-4 py-2 text-sm font-bold text-amber-950">
+                  {event.kategori}
+                </span>
+              </div>
+            )}
+          </div>
+
           <div className="relative flex min-h-56 items-end overflow-hidden bg-gradient-to-br from-amber-100 via-orange-50 to-rose-100 p-8 sm:min-h-72 sm:p-12">
             <div className="absolute -right-8 -top-24 h-72 w-72 rounded-full border-[36px] border-white/50" />
 

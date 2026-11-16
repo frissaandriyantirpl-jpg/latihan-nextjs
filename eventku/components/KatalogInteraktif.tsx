@@ -1,10 +1,40 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { Event } from "@/data/events";
 import { rupiah } from "@/data/events";
 import KartuEvent from "./KartuEvent";
+
+type Urutan = "tanggal" | "termurah" | "termahal" | "nama";
+
+function isUrutan(value: string | null): value is Urutan {
+  return (
+    value === "tanggal" ||
+    value === "termurah" ||
+    value === "termahal" ||
+    value === "nama"
+  );
+}
+
+function bacaUrutan() {
+  const tersimpan = window.localStorage.getItem("urut");
+  return isUrutan(tersimpan) ? tersimpan : "tanggal";
+}
+
+function bacaUrutanServer(): Urutan {
+  return "tanggal";
+}
+
+function berlanggananUrutan(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener("urut-change", callback);
+
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("urut-change", callback);
+  };
+}
 
 export default function KatalogInteraktif({
   events,
@@ -13,40 +43,18 @@ export default function KatalogInteraktif({
 }) {
   const [cari, setCari] = useState("");
   const [kategori, setKategori] = useState("Semua");
-  const [urut, setUrut] = useState("tanggal");
+  const urut = useSyncExternalStore(
+    berlanggananUrutan,
+    bacaUrutan,
+    bacaUrutanServer,
+  );
 
   // Langkah 6: tampilkan lagi
   const [jumlahTampil, setJumlahTampil] = useState(4);
 
-  // Langkah 7: simpan urutan
-  const [sudahBacaUrut, setSudahBacaUrut] = useState(false);
-
   // Langkah 9: penyaring lanjutan
   const [hanyaTersedia, setHanyaTersedia] = useState(false);
   const [hargaMaksimal, setHargaMaksimal] = useState("");
-
-  // Membaca urutan dari localStorage
-  useEffect(() => {
-    const tersimpan = localStorage.getItem("urut");
-
-    if (
-      tersimpan === "tanggal" ||
-      tersimpan === "termurah" ||
-      tersimpan === "termahal" ||
-      tersimpan === "nama"
-    ) {
-      setUrut(tersimpan);
-    }
-
-    setSudahBacaUrut(true);
-  }, []);
-
-  // Menyimpan urutan ke localStorage
-  useEffect(() => {
-    if (sudahBacaUrut) {
-      localStorage.setItem("urut", urut);
-    }
-  }, [urut, sudahBacaUrut]);
 
   // Daftar kategori
   const daftarKategori = [
@@ -151,7 +159,11 @@ export default function KatalogInteraktif({
         <select
           value={urut}
           onChange={(e) => {
-            setUrut(e.target.value);
+            const nilai = e.target.value;
+            if (isUrutan(nilai)) {
+              localStorage.setItem("urut", nilai);
+              window.dispatchEvent(new Event("urut-change"));
+            }
             resetTampilan();
           }}
           className="rounded border bg-white p-3"

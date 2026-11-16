@@ -17,4 +17,3 @@ export default async function EventTerkait({ event }: { event: Event }) {
     </ul>
   );
 }
-```[cite: 1]

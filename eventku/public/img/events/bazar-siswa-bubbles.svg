@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 525">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f16a13"/><stop offset="1" stop-color="#ffd51f"/></linearGradient></defs>
+  <rect width="1000" height="525" fill="url(#bg)"/>
+  <g fill="none" stroke="#fff" stroke-opacity=".23" stroke-width="3">
+    <circle cx="65" cy="50" r="36"/><circle cx="165" cy="93" r="55"/><circle cx="285" cy="40" r="31"/><circle cx="405" cy="95" r="60"/>
+    <circle cx="545" cy="48" r="40"/><circle cx="665" cy="100" r="28"/><circle cx="780" cy="45" r="57"/><circle cx="920" cy="95" r="42"/>
+    <circle cx="985" cy="210" r="35"/><circle cx="70" cy="230" r="59"/><circle cx="220" cy="275" r="35"/><circle cx="350" cy="210" r="53"/>
+    <circle cx="490" cy="270" r="63"/><circle cx="640" cy="205" r="32"/><circle cx="785" cy="260" r="54"/><circle cx="925" cy="315" r="44"/>
+    <circle cx="70" cy="400" r="38"/><circle cx="220" cy="445" r="57"/><circle cx="375" cy="400" r="34"/><circle cx="520" cy="455" r="52"/>
+    <circle cx="670" cy="405" r="39"/><circle cx="820" cy="455" r="62"/><circle cx="970" cy="440" r="31"/>
+  </g>
+  <text x="48" y="455" fill="#fff" font-family="Arial,sans-serif" font-size="49" font-weight="700" paint-order="stroke" stroke="#bd4b0d" stroke-width="2">Bazar Karya Siswa</text>
+</svg>

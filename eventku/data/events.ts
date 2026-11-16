@@ -1,6 +1,7 @@
 export type Event = {
   id: number;
   judul: string;
+  gambar?: string;
   kategori: string;
   tanggal: string;
   lokasi: string;
@@ -13,6 +14,7 @@ export const events: Event[] = [
   {
     id: 1,
     judul: "Workshop React untuk Pemula",
+    gambar: "/img/events/workshop-react-bubbles.svg",
     kategori: "Workshop",
     tanggal: "2026-11-14",
     lokasi: "Lab RPL",
@@ -23,6 +25,7 @@ export const events: Event[] = [
   {
     id: 2,
     judul: "Turnamen Futsal Antar Kelas",
+    gambar: "/img/events/futsal-bubbles.svg",
     kategori: "Olahraga",
     tanggal: "2026-11-20",
     lokasi: "Lapangan Sekolah",
@@ -33,6 +36,7 @@ export const events: Event[] = [
   {
     id: 3,
     judul: "Konser Musik Akustik",
+    gambar: "/img/events/konser-akustik-bubbles.svg",
     kategori: "Musik",
     tanggal: "2026-11-27",
     lokasi: "Aula",
@@ -43,6 +47,7 @@ export const events: Event[] = [
   {
     id: 4,
     judul: "Bazar Karya Siswa",
+    gambar: "/img/events/bazar-siswa-bubbles.svg",
     kategori: "Bazar",
     tanggal: "2026-12-03",
     lokasi: "Halaman Depan",
@@ -53,6 +58,7 @@ export const events: Event[] = [
   {
     id: 5,
     judul: "Pelatihan Desain Poster",
+    gambar: "/img/events/desain-poster-bubbles.svg",
     kategori: "Workshop",
     tanggal: "2026-12-05",
     lokasi: "Lab Multimedia",
@@ -63,6 +69,7 @@ export const events: Event[] = [
   {
     id: 6,
     judul: "Lomba Cerdas Cermat",
+    gambar: "/img/events/cerdas-cermat-bubbles.svg",
     kategori: "Lomba",
     tanggal: "2026-12-10",
     lokasi: "Aula",

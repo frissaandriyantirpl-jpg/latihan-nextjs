@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 525">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1685ed"/><stop offset="1" stop-color="#12b9e9"/></linearGradient></defs>
+  <rect width="1000" height="525" fill="url(#bg)"/>
+  <g fill="none" stroke="#fff" stroke-opacity=".24" stroke-width="3">
+    <circle cx="70" cy="65" r="38"/><circle cx="165" cy="45" r="23"/><circle cx="250" cy="105" r="54"/><circle cx="350" cy="42" r="32"/>
+    <circle cx="440" cy="112" r="22"/><circle cx="555" cy="55" r="52"/><circle cx="665" cy="100" r="35"/><circle cx="760" cy="45" r="27"/>
+    <circle cx="900" cy="78" r="58"/><circle cx="970" cy="175" r="35"/><circle cx="75" cy="220" r="64"/><circle cx="205" cy="260" r="30"/>
+    <circle cx="340" cy="205" r="42"/><circle cx="485" cy="255" r="58"/><circle cx="620" cy="210" r="26"/><circle cx="770" cy="260" r="60"/>
+    <circle cx="915" cy="315" r="42"/><circle cx="120" cy="390" r="33"/><circle cx="280" cy="430" r="60"/><circle cx="480" cy="395" r="28"/>
+    <circle cx="650" cy="440" r="52"/><circle cx="820" cy="410" r="30"/><circle cx="960" cy="475" r="62"/>
+  </g>
+  <text x="48" y="455" fill="#fff" font-family="Arial,sans-serif" font-size="44" font-weight="700" paint-order="stroke" stroke="#0871c7" stroke-width="2">Workshop React untuk Pemula</text>
+</svg>
