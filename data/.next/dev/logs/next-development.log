@@ -1,0 +1,5 @@
+{"timestamp":"00:00:08.535","source":"Server","level":"LOG","message":"- Cache Components enabled"}
+{"timestamp":"00:00:08.536","source":"Server","level":"LOG","message":"- Partial Prefetching enabled"}
+{"timestamp":"00:00:08.538","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:02:13.496","source":"Server","level":"LOG","message":"○ Compiling / ..."}
+{"timestamp":"00:02:33.774","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}

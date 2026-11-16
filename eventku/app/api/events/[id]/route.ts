@@ -1,6 +1,4 @@
-
 import { events } from "@/data/events";
-import { NextRequest } from "next/server";
 
 type RouteContext = {
   params: Promise<{
@@ -9,7 +7,7 @@ type RouteContext = {
 };
 
 export async function GET(
-  request: NextRequest,
+  _request: Request,
   context: RouteContext
 ) {
   const { id } = await context.params;
@@ -25,5 +23,5 @@ export async function GET(
     );
   }
 
-  return Response.json(event, { status: 200 });
+  return Response.json(event);
 }
