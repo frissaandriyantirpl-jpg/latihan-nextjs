@@ -1,20 +1,2 @@
-export type Pesanan = {
-  nomor: number;
-  eventId: number;
-  judul: string;
-  nama: string;
-  email: string;
-  jumlah: number;
-  total: number;
-  waktu: string;
-};
-
-export const pesanan: Pesanan[] = [];
-
-let nomorTerakhir = 0;
-
-export function tambahPesanan(data: Omit<Pesanan, "nomor">) {
-  nomorTerakhir += 1;
-  pesanan.unshift({ nomor: nomorTerakhir, ...data });
-  return nomorTerakhir;
-}
+export type Pesanan={id?:number;event_id:number;nama:string;email:string;jumlah:number;total:number;created_at?:string};
+export function totalHarga(harga:number,jumlah:number){ return harga*jumlah; }

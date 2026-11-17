@@ -1,0 +1,1 @@
+export default function Halaman({children,title,subtitle}:{children:React.ReactNode;title:string;subtitle?:string}){return(<div className="mx-auto max-w-4xl"><h1 className="text-3xl font-black">{title}</h1>{subtitle&&<p className="mt-1 text-zinc-500">{subtitle}</p>}<div className="mt-6">{children}</div></div>);}
