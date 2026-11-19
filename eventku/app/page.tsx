@@ -1,10 +1,11 @@
+
 import Link from "next/link";
-import { ambilEvents, ambilEventsTerdekat } from "@/data/ambil";
+import { ambilEvents } from "@/data/ambil";
 import KartuEvent from "@/components/KartuEvent";
 
 export default async function Beranda() {
   const semua = await ambilEvents();
-  const terdekat = await ambilEventsTerdekat();
+  const terdekat = semua.slice(0, 3);
   const gratis = semua.filter((e) => e.harga === 0).length;
 
   const kategori = [
@@ -137,6 +138,7 @@ export default async function Beranda() {
             Semua Event →
           </Link>
         </div>
+
         {terdekat.length === 0 ? (
           <div className="mt-7 rounded-[28px] border border-dashed border-[#f7d7e6] bg-[#fffafc] p-10 text-center shadow-[0_12px_24px_rgba(236,72,153,0.04)]">
             <p className="text-5xl">🎪</p>

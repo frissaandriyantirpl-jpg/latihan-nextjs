@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { events } from "@/data/events";
+
+import { ambilEvents } from "@/data/ambil";
 
 export async function GET() {
-  return NextResponse.json(events);
+  return Response.json(await ambilEvents());
 }
