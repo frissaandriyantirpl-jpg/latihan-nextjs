@@ -1,29 +1,38 @@
-
-import { events, type Event } from "@/data/events";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import type { Event } from "@/data/events";
 
-// Mengambil data event dari database Supabase
 export async function ambilEvents(): Promise<Event[]> {
+  const { data, error } = await supabase.from("events").select("*").order("tanggal");
+  if (error) throw new Error("Gagal memuat event: " + error.message);
+  return data as Event[];
+}
+
+export async function ambilEvent(id: number): Promise<Event | null> {
+  // Isi URL bisa apa saja (misalnya /event/abc). Periksa dulu sebelum bertanya ke database.
+  if (!Number.isInteger(id)) return null;
+  const { data, error } = await supabase.from("events").select("*").eq("id", id).maybeSingle();
+  if (error) throw new Error("Gagal memuat event: " + error.message);
+  return data as Event | null;
+}
+
+export async function ambilTerkait(event: Event): Promise<Event[]> {
   const { data, error } = await supabase
     .from("events")
     .select("*")
-    .order("tanggal", { ascending: true });
-
-  if (error) {
-    throw new Error(`Gagal memuat event: ${error.message}`);
-  }
-
-  return (data ?? []) as Event[];
+    .eq("kategori", event.kategori)
+    .neq("id", event.id)
+    .order("tanggal");
+  if (error) throw new Error("Gagal memuat event terkait: " + error.message);
+  return data as Event[];
 }
 
-// Mengambil event berdasarkan ID
-export async function ambilEvent(id: number) {
-  return events.find((e) => e.id === id);
-}
-
-// Mengambil event terkait berdasarkan kategori
-export async function ambilTerkait(event: Event) {
-  return events.filter(
-    (e) => e.kategori === event.kategori && e.id !== event.id
-  );
+// Pesanan berisi nama dan email orang, jadi dibaca memakai kunci rahasia (hanya di server).
+export async function hitungPesanan(eventId: number): Promise<number> {
+  const { count, error } = await supabaseAdmin
+    .from("pesanan")
+    .select("*", { count: "exact", head: true })
+    .eq("event_id", eventId);
+  if (error) throw new Error("Gagal menghitung pesanan: " + error.message);
+  return count ?? 0;
 }
