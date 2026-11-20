@@ -36,3 +36,13 @@ export async function hitungPesanan(eventId: number): Promise<number> {
   if (error) throw new Error("Gagal menghitung pesanan: " + error.message);
   return count ?? 0;
 }
+
+export async function hitungTiket(eventId: number): Promise<number> {
+  if (!Number.isInteger(eventId)) return 0;
+  const { data, error } = await supabaseAdmin
+    .from("pesanan")
+    .select("jumlah")
+    .eq("event_id", eventId);
+  if (error) throw new Error("Gagal menghitung jumlah tiket: " + error.message);
+  return (data ?? []).reduce((total, row) => total + (row.jumlah ?? 0), 0);
+}

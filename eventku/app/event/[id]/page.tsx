@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { rupiah } from "@/data/events";
-import { ambilEvent, hitungPesanan, ambilTerkait } from "@/data/ambil";
+import { ambilEvent, hitungPesanan, hitungTiket, ambilTerkait } from "@/data/ambil";
 import FormPesan from "@/components/FormPesan";
 import TombolFavorit from "@/components/TombolFavorit";
 import EventTerkait from "@/components/EventTerkait";
@@ -24,7 +24,8 @@ export default async function Detail({ params }: PageProps<"/event/[id]">) {
   if (!event) notFound();
 
   const jumlahPesanan = await hitungPesanan(event.id);
-  const sisa = Math.max(0, (event.kuota ?? 0) - jumlahPesanan);
+  const jumlahTiket = await hitungTiket(event.id);
+  const sisa = Math.max(0, (event.kuota ?? 0) - jumlahTiket);
   const terkait = await ambilTerkait(event);
 
   return (
@@ -48,7 +49,9 @@ export default async function Detail({ params }: PageProps<"/event/[id]">) {
       </p>
       <p className="mt-4 text-xl font-semibold">{rupiah(event.harga)}</p>
       <p className="text-slate-600">Sisa {sisa} dari {event.kuota} tiket</p>
-      <p className="text-sm text-slate-500">{jumlahPesanan} pesanan masuk lewat EventKu</p>
+      <p className="text-sm text-slate-500">
+        {jumlahPesanan} pesanan · {jumlahTiket} tiket dipesan lewat EventKu
+      </p>
       <TombolFavorit eventId={event.id} />
       <FormPesan event={event} />
       <section className="mt-6">
