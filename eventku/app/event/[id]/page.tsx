@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ambilEvent, hitungPesanan, ambilEventTerkait } from "@/data/ambil";
+import { ambilEvent, hitungPesanan, ambilTerkait } from "@/data/ambil";
 import { rupiah } from "@/data/events";
 import TombolFavorit from "@/components/TombolFavorit";
 import EventTerkait from "@/components/EventTerkait";
@@ -21,7 +21,7 @@ export default async function Detail({ params }: { params: Promise<{ id: string 
 
   const jumlah = await hitungPesanan(eventId);
   const sisa = Math.max(0, (event.kuota ?? 0) - jumlah);
-  const terkait = await ambilEventTerkait(eventId, event.kategori);
+  const terkait = await ambilTerkait(event);
 
   const persenTerisi = event.kuota ? Math.min(100, Math.round((jumlah / event.kuota) * 100)) : 0;
   const hampirHabis = sisa <= 5 && sisa > 0;
